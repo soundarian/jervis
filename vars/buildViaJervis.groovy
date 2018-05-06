@@ -297,7 +297,7 @@ def call() {
         generator.loadYamlString(jervis_yaml)
         generator.folder_listing = folder_listing
         pipeline_generator = new pipelineGenerator(generator)
-        pipeline_generator.supported_collections = ['cobertura', 'junit', 'artifacts']
+        pipeline_generator.supported_collections = ['cobertura', 'junit', 'artifacts', 'html']
         //attempt to get the private key else return an empty string
         String credentials_id = generator.getObjectValue(generator.jervis_yaml, 'jenkins.secrets_id', '')
         String private_key_contents = getFolderRSAKeyCredentials(jenkins_folder, credentials_id)
@@ -474,10 +474,10 @@ def call() {
         if(publishableItems) {
             stage("Publish results") {
                 //unstash and publish in parallel
-                Map tasks = [failFast: true]
+//                Map tasks = [failFast: true]
                 for(String publishable : publishableItems) {
                     String publish = publishable
-                    tasks["Publish ${publish}"] = {
+//                    tasks["Publish ${publish}"] = {
                         try {
                             unstash publish
                             processDefaultPublishable(pipeline_generator.getPublishable(publish), publish, is_pull_request)
@@ -485,9 +485,9 @@ def call() {
                         catch(e) {
                             currentBuild.result = 'FAILURE'
                         }
-                    }
+//                    }
                 }
-                parallel(tasks)
+//                parallel(tasks)
             }
         }
         if(currentBuild.result == 'FAILURE') {
