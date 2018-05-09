@@ -251,7 +251,9 @@ def call() {
     env.IS_PR_BUILD = "${is_pull_request}" as String
     currentBuild.rawBuild.parent.parent.sources[0].source.with {
         github_org = it.repoOwner
+	env.GITHUB_ORG = github_org
         github_repo = it.repository
+	env.GITHUB_REPO = github_repo
         github_domain = (it.apiUri)? it.apiUri.split('/')[2] : 'github.com'
     }
     //fix pull request branch name.  Otherwise shows up as PR-* as the branch name.
